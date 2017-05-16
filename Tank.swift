@@ -1,52 +1,50 @@
 class Tank: gameObject
 {
-  var shield = 0
-  let messageID = "12345" //Change numbers later
-	func launchMissile(energyInput: Int, designatedTarget: [Int])
-  {
-    loseEnergy(energyLost: energyInput)
-    /*The tank object sends a command to the tankworld class with a
-    energy int and a position. It calls a method that check the position
-    and surrounding positons for gameObjects and subtracts the energy specified from them.*/
-	}
+  private (set) var shields: Int = 0
+  private var radarResults: [RadarResult]?
+  private var receivedMessage: String?
+  private (set) var preActions = [Actions : PreAction]()
+  private (set) var postActions = [Actions : PostAction]()
+  private let initialInstructions: String?
 
-	func jump(distance: Int, direction: Direction)
+  init(row: Int, col: Int, name: String, energy: Int, id: String, instructions: String)
   {
-      /*Calls the move command and gives it the distance
-      and direction to move*/
-	}
-  func setShield(energyInput: Int)
-  {
-    /*Sets the shield to the energy given*/
-    loseEnergy(energyLost: energyInput)
-    shield = 8 * energyInput
+    initialInstructions = instructions
+    super.init(row: row, col: col, objectType: .Tank, name: name, energy: energy, id: id)
   }
-  func RunRadar(distance: Int) -> ([gameObject.energy], [gameObject.id], [gameObject.Position])
+
+  final func clearActions()
   {
-    /*Calls RadarResult with the position of the tank and a specified
-    distance then returns an array of the found fame objects*/
+    preActions = [Actions : PreAction]()
+    postActions = [Actions : PostAction]()
   }
-  func SendMessage(message: String)
+
+  final func recieveMessage(message: String?) {receivedMessage = message}
+
+  func computePreActions()
   {
-    /*Calls the MessageCenter and gives it a tuple containing
-    the messageId and the message*/
+
   }
-  func RecieveMessage(id: String)
+
+  func computePostActions()
   {
-    /*Calls the MessageCenter and checks if it contains
-    a message with a given id*/
+
   }
-  func DropMine(energyInput: Int, direction: Direction)
+  final func addPreAction(preAction : PreAction)
   {
-    /*Creates a mine game object at the space adjacent to the
-    tank in the specified direction*/
+    preActions[preAction.action] = preAction
   }
-  func DropRover(energyInput: Int, direction: Direction, roverDir: Direction, Random: Bool)
+  final func addPostAction(postAction: PostAction)
   {
-    /* Creates a rover game object at the space adjacent
-    to the tank in the specified direction and then checks
-    to see if the random bool is true. If it is the rover is set
-    to move randomly. Otherwise it sets the rover to move in the
-    specified direction*/
+    postActions[postAction.action] = postAction
+  }
+  final func setShields(amount: Int) {shields = amount}
+  final func setRadarResult(radarResults: [RadarResult]!)
+  {
+    self.radarResults = radarResults
+  }
+  final func setReceivedMessage(recievedMessage: String!)
+  {
+    self.receivedMessage = receivedMessage
   }
 }

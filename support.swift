@@ -31,4 +31,5 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
 	for _ in 0..<num {addon.append(" ")}
 	if right{return result + addon}
 	return addon + result
+
 }
