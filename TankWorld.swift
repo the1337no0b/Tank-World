@@ -1,3 +1,5 @@
+//complete*
+
 class TankWorld: CustomStringConvertible {
 
 	var topLine: String = "."
