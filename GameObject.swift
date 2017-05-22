@@ -1,3 +1,5 @@
+//complete
+
 class gameObject: CustomStringConvertible
 {
 	let objectType: GameObjectType
