@@ -1,5 +1,6 @@
 /*still needs *some* support functions:
 (list them here)
+1. Send/Receive Messages func is missing (It's already written by Stulin)
 */
 
 import Foundation
