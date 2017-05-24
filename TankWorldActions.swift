@@ -11,7 +11,7 @@ extension TankWorld
     }
 
     applyCost(tank, amount: Constants.costOfSendingMessage)
-    MessageCenter.sendMessage(id: sendMessageAction.id, message: sendMessageAction.message)
+    MessageCenter.sendMessage(Id: sendMessageAction.id, message: sendMessageAction.message)
   }
   func actionReceiveMessage(tank: Tank, receiveMessageAction: ReceiveMessageAction)
   {
@@ -25,7 +25,7 @@ extension TankWorld
     }
 
     applyCost(tank, amount: Constants.costOfReceivingMessage)
-    let message = MessageCenter.receivedMessage(id: receiveMessageAction.id)
+    let message = MessageCenter.receivedMessage(Id: receiveMessageAction.id)
     tank.setReceivedMessage(receivedMessage: message)
   }
   func actionSetShields(tank: Tank, setShieldsAction: SetShieldsAction)
@@ -81,18 +81,18 @@ extension TankWorld
       logger.addLog(tank, "Invalid destination to move")
       return
     }
-    let posCheck = grid[newPos.row, newPos.col]
-    if (posCheck != nil) && (posCheck.objectType == .Tank)
+    let posCheck = grid[newPos.row][newPos.col]!
+    if (posCheck.objectType == .Tank)
     {
       logger.addLog(tank, "Invalid destination to move")
       return
     }
     applyCost(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveAction.distance - 1])
-    grid[newPos.row, newPos.col] = tank
+    grid[newPos.row][newPos.col] = tank
     tank.setPosition(newPosition: newPos)
-    if (newPos.objectType == .Mine) || (newPos.objectType == .Rover)
+    if (posCheck.objectType == .Mine) || (posCheck.objectType == .Rover)
     {
-      tank.useEnergy(amount: (newPos.energy * Constants.mineStrikeMultiple))
+      tank.useEnergy(amount: (posCheck.energy * Constants.mineStrikeMultiple))
     }
   }
   func actionRunRadar(tank: Tank, runRadarAction: RunRadarAction)
@@ -116,8 +116,8 @@ extension TankWorld
     var go: gameObject
     for i in positionResult
     {
-      go = grid[i.row, i.col]!
-      var radar = radarResult(go: go)
+      go = grid[i.row][i.col]!
+      var radar = RadarResult(go: go)
       radarResults.append(radar)
     }
     tank.setRadarResult(radarResults: radarResults)
