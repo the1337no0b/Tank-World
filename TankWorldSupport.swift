@@ -1,3 +1,13 @@
+/*still needs *some* support functions:
+func randomizeGameObjects
+func findwinner
+Optional:
+func makeOffsetPosition
+func findFreeAdjacent
+func isGoodIndex
+func getRandomDirection
+func distance
+*/
 import Foundation
 import Glibc
 extension TankWorld
