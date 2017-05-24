@@ -1,14 +1,3 @@
-/*still needs *some* support functions:
-func randomizeGameObjects
-func findwinner
-Optional:
-func makeOffsetPosition
-func findFreeAdjacent
-func isGoodIndex
-func getRandomDirection
-func distance
-*/
-
 import Foundation
 import Glibc
 extension TankWorld
@@ -139,7 +128,7 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
       for e in 0...numberRows
       {
         objectCheck = grid[e][i]
-        if (objectCheck != nil)
+        if (objectCheck != nil) && (isDead(objectCheck) != true)
         {
           objects.append(objectCheck!)
         }
@@ -168,9 +157,21 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
     {
       if (i.objectType == .Rover)
       {
-        tankCheck.append(i as! Rover)
+        roverCheck.append(i as! Rover)
       }
     }
     return roverCheck
+  }
+  func findWinner() -> Tank?
+  {
+    let winCheck: [Tank] = findAllTanks()
+    if (winCheck.count == 1)
+    {
+      return winCheck[0]
+    }
+    else
+    {
+      return nil
+    }
   }
 }
