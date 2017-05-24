@@ -1,3 +1,4 @@
+//complete
 struct MessageCenter
 {
   static var storedMessages: [String: String] = [:]
