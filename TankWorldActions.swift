@@ -1,4 +1,3 @@
-//complete except for mine/rover
 extension TankWorld
 {
   func actionSendMessage(tank: Tank, sendMessageAction: SendMessageAction)
