@@ -1,3 +1,5 @@
+//complete except for mine/rover actions
+
 enum Actions
 {
   case SendMessage

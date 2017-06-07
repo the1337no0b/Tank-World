@@ -1,4 +1,5 @@
 /*still needs *some* support functions:
+
 func randomizeGameObjects
 func findwinner
 Optional:
@@ -8,6 +9,7 @@ func isGoodIndex
 func getRandomDirection
 func distance
 */
+
 import Foundation
 import Glibc
 extension TankWorld
