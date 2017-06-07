@@ -12,9 +12,9 @@ extension TankWorld {
 			for col in 0..<grid.count {
 				if testWorld.grid[row][col] != nil {
           //"\(grid[row][col]!.position.row, grid[row][col]!.position.col)
-					content1 += "\(fit("\(grid[row][col]!.energy)", 7, right: true)|"
-          content2 += "\(fit("\(grid[row][col]!.position.row, grid[row][col]!.position.col)", 7, right: true)|"
-          content3 += "\(fit("\(grid[row][col]!.id)", 7, right: true)|"
+					content1 += "\(fit("\(grid[row][col]!.energy)", 7, right: true))|"
+          content2 += "\(fit("\(grid[row][col]!.position.row, grid[row][col]!.position.col)", 7, right: true))|"
+          content3 += "\(fit("\(grid[row][col]!.id)", 7, right: true))|"
 				}
 				else {
 					content1 += "       |"
