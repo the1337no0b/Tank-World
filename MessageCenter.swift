@@ -2,8 +2,8 @@
 
 struct MessageCenter
 {
-  var storedMessages: [String: String]
-  func receivedMessage(id: String) -> String?
+  static var storedMessages: [String: String] = [:]
+  static func receivedMessage(Id: String) -> String?
   {
     var returnMessage: String?
     var found = false
@@ -24,8 +24,8 @@ struct MessageCenter
       return nil
     }
   }
-  mutating func sendMessage(id: String, message: String)
+  static func sendMessage(Id: String, message: String)
   {
-    storedMessages[id] = message
+    storedMessages[Id] = message
   }
 }

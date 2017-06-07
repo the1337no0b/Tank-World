@@ -1,6 +1,13 @@
 /*still needs *some* support functions:
-(list them here)
-1. Send/Receive Messages func is missing (It's already written by Stulin)
+
+func randomizeGameObjects
+func findwinner
+Optional:
+func makeOffsetPosition
+func findFreeAdjacent
+func isGoodIndex
+func getRandomDirection
+func distance
 */
 
 import Foundation
@@ -51,7 +58,7 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
       case .NorthWest : return(Position(row: (position.row + magnitude), col: (position.col - magnitude)))
       case .SouthEast : return(Position(row: (position.row - magnitude), col: (position.col + magnitude)))
       case .SouthWest : return(Position(row: (position.row - magnitude), col: (position.col - magnitude)))
-      default: return position
+      //default: return position
     }
   }
   func isPositionEmpty(_ position: Position) -> Bool
@@ -76,11 +83,11 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
   }
   func getLegalSurroundingPositions(_ position: Position) -> [Position]
   {
-    var arrayPosition: [Position]
+    var arrayPosition: [Position] = []
     var legalPosition: Position
     for i in 0..<8
     {
-      legalPosition = newPosition(position: position, direction: Direction(rawValue: i), magnitude: 1)
+      legalPosition = newPosition(position: position, direction: Direction(rawValue: i)!, magnitude: 1)
       if isValidPosition(legalPosition) == true
       {
         arrayPosition.append(legalPosition)
@@ -92,11 +99,12 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
   {
     if isPositionEmpty(destination) == false
     {
-      let target = grid[destination.row, destination.col]!
-      let missleDamage = power * multiple
-      if (target.objectType == .Tank) && (target.shields != 0)
+      let target = grid[destination.row][destination.col]!
+      var missleDamage = power * multiple
+      if (target.objectType == .Tank)
       {
-        missleDamage = missleDamage - target.shields
+        let targetAsTank = target as! Tank
+        missleDamage = missleDamage - targetAsTank.shields
       }
       let currentEnergy = target.energy
       target.useEnergy(amount: missleDamage)
@@ -108,19 +116,74 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
   }
   func findGameObjectsWithinRange(_ position: Position, range: Int) -> [Position]
   {
-    var posArray: [Position]
+    var posArray: [Position] = []
     var checkPosition: Position
     for i in 0..<range
     {
       for e in 0..<8
       {
         checkPosition = newPosition(position: position, direction: Direction(rawValue: e)!, magnitude: (i + 1))
-        if (grid[checkPosition.row, checkPosition.col] != nil)
+        if (grid[checkPosition.row][checkPosition.col] != nil)
         {
           posArray.append(checkPosition)
         }
       }
     }
     return posArray
+  }
+  func findAllGameObjects() -> [gameObject]
+  {
+    var objects: [gameObject] = []
+    var objectCheck: gameObject?
+    for i in 0...numberCols
+    {
+      for e in 0...numberRows
+      {
+        objectCheck = grid[e][i]
+        if (objectCheck != nil) && (isDead(objectCheck) != true)
+        {
+          objects.append(objectCheck!)
+        }
+      }
+    }
+    return objects
+  }
+  func findAllTanks() -> [Tank]
+  {
+    let objects = findAllGameObjects()
+    var tankCheck: [Tank] = []
+    for i in objects
+    {
+      if (i.objectType == .Tank)
+      {
+        tankCheck.append(i as! Tank)
+      }
+    }
+    return tankCheck
+  }
+  func findAllRovers() -> [Rover]
+  {
+    let objects = findAllGameObjects()
+    var roverCheck: [Rover] = []
+    for i in objects
+    {
+      if (i.objectType == .Rover)
+      {
+        roverCheck.append(i as! Rover)
+      }
+    }
+    return roverCheck
+  }
+  func findWinner() -> Tank?
+  {
+    let winCheck: [Tank] = findAllTanks()
+    if (winCheck.count == 1)
+    {
+      return winCheck[0]
+    }
+    else
+    {
+      return nil
+    }
   }
 }
