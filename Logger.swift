@@ -1,8 +1,16 @@
-struct logger: CustomStringConvertible {
+struct Logger: CustomStringConvertible {
   var log: String = ""
-
-  mutating func addLog(gameObject: gameObject, message: String) {
-    log += "\(gameObject): \(message)\n"
+  let name: String
+  mutating func addLog(_ GOType: gameObject, _ message: String) {
+    log += "\(GOType): \(message)\n"
+  }
+  mutating func clearLog()
+  {
+    log = ""
+  }
+  init(name: String)
+  {
+    self.name = name
   }
   var description: String {
     return "\(log)"
