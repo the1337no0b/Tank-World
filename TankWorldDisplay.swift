@@ -2,7 +2,10 @@
 
 extension TankWorld {
   
-  func printGrid() {
+  func printGrid() -> String
+  {
+    topLine = ""
+    fullContent = ""
 		for row in 0..<grid.count {
 			var content1: String = "|"
 			var content2: String = "|"
@@ -26,6 +29,6 @@ extension TankWorld {
 			topLine += "_______."
 			fullContent += "\(content1)\n\(content2)\n\(content3)\n\(bottomText)\n"
 		}
-	print("\(topLine)\n\(fullContent)")
+	return ("\(topLine)\n\(fullContent)")
 	}
 }
