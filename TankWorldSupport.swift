@@ -46,18 +46,18 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
 	if right{return result + addon}
 	return addon + result
   }
-  func newPosition(position: Position, direction: Direction, magnitude: Int) -> Position
+   func newPosition(position: Position, direction: Direction, magnitude: Int) -> Position
   {
     switch direction
     {
-      case .North : return(Position(row: (position.row + magnitude), col: position.col))
-      case .South : return(Position(row: (position.row - magnitude), col: position.col))
+      case .South : return(Position(row: (position.row + magnitude), col: position.col))
+      case .North : return(Position(row: (position.row - magnitude), col: position.col))
       case .East : return(Position(row: position.row, col: (position.col + magnitude)))
       case .West : return(Position(row: position.row, col: (position.col - magnitude)))
-      case .NorthEast : return(Position(row: (position.row + magnitude), col: (position.col + magnitude)))
-      case .NorthWest : return(Position(row: (position.row + magnitude), col: (position.col - magnitude)))
-      case .SouthEast : return(Position(row: (position.row - magnitude), col: (position.col + magnitude)))
-      case .SouthWest : return(Position(row: (position.row - magnitude), col: (position.col - magnitude)))
+      case .SouthEast : return(Position(row: (position.row + magnitude), col: (position.col + magnitude)))
+      case .SouthWest : return(Position(row: (position.row + magnitude), col: (position.col - magnitude)))
+      case .NorthEast : return(Position(row: (position.row - magnitude), col: (position.col + magnitude)))
+      case .NorthWest : return(Position(row: (position.row - magnitude), col: (position.col - magnitude)))
       //default: return position
     }
   }
@@ -110,6 +110,7 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
       target.useEnergy(amount: missleDamage)
       if (isDead(target) == true) && (target.objectType == .Tank)
       {
+        grid[destination.row][destination.col] = nil
         tank.addEnergy(amount: (currentEnergy / Constants.missleStrikeEnergyTransferFraction))
       }
     }
@@ -123,9 +124,12 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
       for e in 0..<8
       {
         checkPosition = newPosition(position: position, direction: Direction(rawValue: e)!, magnitude: (i + 1))
-        if (grid[checkPosition.row][checkPosition.col] != nil)
+        if (isValidPosition(checkPosition) == true)
         {
-          posArray.append(checkPosition)
+          if (grid[checkPosition.row][checkPosition.col] != nil)
+          {
+            posArray.append(checkPosition)
+          }
         }
       }
     }
@@ -135,14 +139,17 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
   {
     var objects: [gameObject] = []
     var objectCheck: gameObject?
-    for i in 0...numberCols
+    for i in 0..<numberCols
     {
-      for e in 0...numberRows
+      for e in 0..<numberRows
       {
         objectCheck = grid[e][i]
-        if (objectCheck != nil) && (isDead(objectCheck) != true)
+        if (objectCheck != nil)
         {
-          objects.append(objectCheck!)
+          if (isDead(objectCheck!) != true)
+          {
+            objects.append(objectCheck!)
+          }
         }
       }
     }
@@ -161,7 +168,7 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
     }
     return tankCheck
   }
-  func findAllRovers() -> [Rover]
+  /*func findAllRovers() -> [Rover]
   {
     let objects = findAllGameObjects()
     var roverCheck: [Rover] = []
@@ -173,7 +180,7 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
       }
     }
     return roverCheck
-  }
+  }*/
   func findWinner() -> Tank?
   {
     let winCheck: [Tank] = findAllTanks()
