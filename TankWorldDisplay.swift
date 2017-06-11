@@ -1,6 +1,7 @@
 //put the grid printout here
 
 extension TankWorld {
+  
   func printGrid() {
 		for row in 0..<grid.count {
 			var content1: String = "|"
