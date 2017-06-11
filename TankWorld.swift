@@ -2,12 +2,18 @@
 
 class TankWorld {
 	var grid = [[gameObject?]] ()
-	var turn: Int
+	var turn: Int = 0
 	var topLine: String = "."
 	var fullContent: String = ""
+	let numberRows: Int
+	let numberCols: Int
+	var gameOver = false
+	var lastLivingTank: Tank? = nil
+	var numberLivingTanks = 0
 	init() {
-		grid = Array(repeating: Array(repeating: nil, count: 15), count: 15)
-		turn = 1
+		self.numberRows = rows
+		self.numberCols = cols
+		grid = Array(repeating: Array(repeating: nil, count: cols), count: rows)
 	}
 	func addGameObject(GameObject: GameObject, position: Position) {
 		grid[position.row][position.col] = GameObject
