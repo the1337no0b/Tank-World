@@ -105,11 +105,16 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
       {
         let targetAsTank = target as! Tank
         missleDamage = missleDamage - targetAsTank.shields
+        if (missleDamage <= 0)
+        {
+          missleDamage = 0
+        }
       }
       let currentEnergy = target.energy
       target.useEnergy(amount: missleDamage)
       if (isDead(target) == true) && (target.objectType == .Tank)
       {
+        grid[destination.row][destination.col] = nil
         tank.addEnergy(amount: (currentEnergy / Constants.missleStrikeEnergyTransferFraction))
       }
     }
