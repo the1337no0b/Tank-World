@@ -82,19 +82,26 @@ extension TankWorld
       logger.addLog(tank, "Invalid destination to move")
       return
     }
-    let posCheck = grid[newPos.row][newPos.col]!
-    if (posCheck.objectType == .Tank)
+    if let posCheck = grid[newPos.row][newPos.col]
     {
-      logger.addLog(tank, "Invalid destination to move")
-      return
+      if (posCheck.objectType == .Tank)
+      {
+        logger.addLog(tank, "Invalid destination to move")
+        return
+      }
+      if (posCheck.objectType == .Mine) || (posCheck.objectType == .Rover)
+      {
+        applyCost(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveAction.distance - 1])
+        grid[tank.position.row][tank.position.col] = nil
+        tank.setPosition(newPosition: newPos)
+        grid[newPos.row][newPos.col] = tank
+        tank.useEnergy(amount: (posCheck.energy * Constants.mineStrikeMultiple))
+      }
     }
     applyCost(tank, amount: Constants.costOfMovingTankPerUnitDistance[moveAction.distance - 1])
-    grid[newPos.row][newPos.col] = tank
+    grid[tank.position.row][tank.position.col] = nil
     tank.setPosition(newPosition: newPos)
-    if (posCheck.objectType == .Mine) || (posCheck.objectType == .Rover)
-    {
-      tank.useEnergy(amount: (posCheck.energy * Constants.mineStrikeMultiple))
-    }
+    grid[newPos.row][newPos.col] = tank
   }
   func actionRunRadar(tank: Tank, runRadarAction: RunRadarAction)
   {
@@ -106,22 +113,21 @@ extension TankWorld
       logger.addLog(tank, "Insufficient energy to run radar")
       return
     }
-    if (runRadarAction.range >= Constants.costOfRadarByUnitsDistance.count)
+    if (runRadarAction.range >= Constants.costOfRadarByUnitsDistance.count - 1)
     {
       logger.addLog(tank, "Radar range too large")
       return
     }
-    applyCost(tank, amount: Constants.costOfRadarByUnitsDistance[runRadarAction.range - 1])
+    applyCost(tank, amount: Constants.costOfRadarByUnitsDistance[runRadarAction.range])
     let positionResult = findGameObjectsWithinRange(tank.position, range: runRadarAction.range)
-    var radarResults: [RadarResult]
+    var radarResults: [RadarResult] = []
     var go: gameObject
     for i in positionResult
     {
       go = grid[i.row][i.col]!
-      var radar = RadarResult(go: go)
+      let radar = RadarResult(go: go)
       radarResults.append(radar)
     }
     tank.setRadarResult(radarResults: radarResults)
   }
 }
-
