@@ -206,14 +206,23 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
       var goNew: gameObject
 
       var returnArray = gameObjects
-      for i in 0..<gameObjects.count
+      if (gameObjects.count > 3)
       {
-        goSave = gameObjects[i]
-        goPos = getRandomInt(range: gameObjects.count - 1)
-        goNew = gameObjects[goPos]
-        returnArray[i] = goNew
-        returnArray[goPos] = goSave
+        for i in 0..<gameObjects.count
+        {
+          goSave = gameObjects[i]
+          goPos = getRandomInt(range: (gameObjects.count - 1))
+          goNew = gameObjects[goPos]
+          returnArray[i] = goNew
+          returnArray[goPos] = goSave
+        }
       }
       return(returnArray)
+  }
+  func distance(_ p1: Position, _ p2: Position) -> Int
+  {
+    var solution: Double = abs((Double(p1.row - p2.row)) * (Double(p1.row - p2.row)))
+    solution += Double(abs((p1.col - p2.col) * (p1.col - p2.col)))
+    return Int(sqrt(solution))
   }
 }
