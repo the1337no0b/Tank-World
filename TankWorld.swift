@@ -7,7 +7,7 @@ class TankWorld {
 	var fullContent: String = ""
 	let numberRows: Int
 	let numberCols: Int
-	var logger: Logger = Logger(name: "TankWorldLogger")
+	var logger: Logger = Logger()
 	var gameOver = false
 	var lastLivingTank: Tank? = nil
 	var numberLivingTanks = 0
