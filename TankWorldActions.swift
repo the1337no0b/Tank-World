@@ -43,7 +43,7 @@ extension TankWorld
     applyCost(tank, amount: setShieldsAction.shield)
     tank.setShields(amount: setShieldsAction.shield * Constants.shieldPowerMultiple)
   }
-    func actionFireMissle(tank: Tank, fireMissleAction: FireMissleAction)
+  func actionFireMissle(tank: Tank, fireMissleAction: FireMissleAction)
   {
     if isDead(tank) {return}
     logger.addLog(tank, "Firing Missle \(fireMissleAction)")
@@ -131,5 +131,106 @@ extension TankWorld
       radarResults.append(radar)
     }
     tank.setRadarResult(radarResults: radarResults)
+  }
+  func actionDropMine(tank: Tank, dropMineAction: DropMineAction)
+  {
+    if isDead(tank) {return}
+    logger.addLog(tank, "Dropping Mine \(dropMineAction)")
+    if (dropMineAction.isRover == false)
+    {
+      if !isEnergyAvailable(tank, amount: (Constants.costOfReleasingMine + dropMineAction.power))
+      {
+        logger.addLog(tank, "Insufficient energy to drop mine")
+        return
+      }
+      applyCost(tank, amount: (Constants.costOfReleasingMine + dropMineAction.power))
+      if (dropMineAction.dropDirection == nil)
+      {
+        let check = getLegalSurroundingPositions(tank.position)
+        let randPos = getRandomInt(range: check.count)
+        grid[check[randPos].row][check[randPos].col] = Mine(row: check[randPos].row, col: check[randPos].col, energy: dropMineAction.power)
+      }
+      else
+      {
+        let checkConstant = newPosition(position: tank.position, direction: dropMineAction.dropDirection!, magnitude: 1)
+        grid[checkConstant.row][checkConstant.col] = Mine(row: checkConstant.row, col: checkConstant.col, energy: dropMineAction.power)
+      }
+    }
+    else
+    {
+      if !isEnergyAvailable(tank, amount: (Constants.costOfReleasingRover + dropMineAction.power))
+      {
+        logger.addLog(tank, "Insufficient energy to drop rover")
+        return
+      }
+      applyCost(tank, amount: (Constants.costOfReleasingRover + dropMineAction.power))
+      if (dropMineAction.dropDirection == nil)
+      {
+        let check = getLegalSurroundingPositions(tank.position)
+        let randPos = getRandomInt(range: check.count)
+        grid[check[randPos].row][check[randPos].col] = Rover(row: check[randPos].row, col: check[randPos].col, energy: dropMineAction.power, direction: dropMineAction.moveDirection)
+      }
+      else
+      {
+        let checkConstant = newPosition(position: tank.position, direction: dropMineAction.dropDirection!, magnitude: 1)
+        grid[checkConstant.row][checkConstant.col] = Rover(row: checkConstant.row, col: checkConstant.col, energy: dropMineAction.power, direction: dropMineAction.moveDirection)
+      }
+    }
+  }
+  func actionMoveRover(rover: Rover)
+  {
+    if isDead(rover) {return}
+    logger.addLog(rover, "Moving Rover")
+    applyCost(rover, amount: Constants.costOfMovingRover)
+    if (rover.direction == nil)
+    {
+      let newPos = newPosition(position: rover.position, direction: Direction(rawValue: getRandomInt(range: 7))!, magnitude: 1)
+      if !isValidPosition(newPos)
+      {
+        logger.addLog(rover, "Invalid destination to move")
+        return
+      }
+      if let posCheck = grid[newPos.row][newPos.col]
+      {
+        if (posCheck.objectType == .Tank)
+        {
+          posCheck.useEnergy(amount: Constants.mineStrikeMultiple * rover.energy)
+          grid[rover.position.row][rover.position.col] = nil
+        }
+        if (posCheck.objectType == .Mine) || (posCheck.objectType == .Rover)
+        {
+          grid[rover.position.row][rover.position.col] = nil
+          grid[newPos.row][newPos.col] = nil
+        }
+      }
+      grid[rover.position.row][rover.position.col] = nil
+      rover.setPosition(newPosition: newPos)
+      grid[newPos.row][newPos.col] = rover
+    }
+    else
+    {
+      let newPos = newPosition(position: rover.position, direction: rover.direction!, magnitude: 1)
+      if !isValidPosition(newPos)
+      {
+        logger.addLog(rover, "Invalid destination to move")
+        return
+      }
+      if let posCheck = grid[newPos.row][newPos.col]
+      {
+        if (posCheck.objectType == .Tank)
+        {
+          posCheck.useEnergy(amount: Constants.mineStrikeMultiple * rover.energy)
+          grid[rover.position.row][rover.position.col] = nil
+        }
+        if (posCheck.objectType == .Mine) || (posCheck.objectType == .Rover)
+        {
+          grid[rover.position.row][rover.position.col] = nil
+          grid[newPos.row][newPos.col] = nil
+        }
+      }
+      grid[rover.position.row][rover.position.col] = nil
+      rover.setPosition(newPosition: newPos)
+      grid[newPos.row][newPos.col] = rover
+    }
   }
 }
