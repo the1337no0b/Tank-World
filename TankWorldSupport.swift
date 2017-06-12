@@ -173,9 +173,10 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
     }
     return tankCheck
   }
-  /*func findAllRovers() -> [Rover]
+  func findAllRovers() -> [Rover]
   {
-    let objects = findAllGameObjects()
+    var objects = findAllGameObjects()
+    objects = randomizeGameObjects(gameObjects: objects)
     var roverCheck: [Rover] = []
     for i in objects
     {
@@ -185,7 +186,7 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
       }
     }
     return roverCheck
-  }*/
+  }
   func findWinner() -> Tank?
   {
     let winCheck: [Tank] = findAllTanks()
