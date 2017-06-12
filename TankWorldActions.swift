@@ -43,7 +43,7 @@ extension TankWorld
     applyCost(tank, amount: setShieldsAction.shield)
     tank.setShields(amount: setShieldsAction.shield * Constants.shieldPowerMultiple)
   }
-  func actionFireMissle(tank: Tank, fireMissleAction: FireMissleAction)
+    func actionFireMissle(tank: Tank, fireMissleAction: FireMissleAction)
   {
     if isDead(tank) {return}
     logger.addLog(tank, "Firing Missle \(fireMissleAction)")
@@ -58,7 +58,9 @@ extension TankWorld
       logger.addLog(tank, "Invalid destination for missle")
       return
     }
-    applyCost(tank, amount: fireMissleAction.power)
+    let missleFlight = distance(tank.position, fireMissleAction.destination)
+    let cost = fireMissleAction.power + (200 * missleFlight)
+    applyCost(tank, amount: cost)
     missleStrike(tank, fireMissleAction.destination, fireMissleAction.power, Constants.missleStrikeMultiple)
     let collateralPosition = getLegalSurroundingPositions(fireMissleAction.destination)
     for i in collateralPosition
