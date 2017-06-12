@@ -46,7 +46,7 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
 	if right{return result + addon}
 	return addon + result
   }
-   func newPosition(position: Position, direction: Direction, magnitude: Int) -> Position
+  func newPosition(position: Position, direction: Direction, magnitude: Int) -> Position
   {
     switch direction
     {
@@ -161,7 +161,8 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
   }
   func findAllTanks() -> [Tank]
   {
-    let objects = findAllGameObjects()
+    var objects = findAllGameObjects()
+    objects = randomizeGameObjects(gameObjects: objects)
     var tankCheck: [Tank] = []
     for i in objects
     {
@@ -196,5 +197,23 @@ func fit(_ s: String,_ size: Int, right: Bool = true) -> String {
     {
       return nil
     }
+  }
+  func randomizeGameObjects(gameObjects: [gameObject])-> [gameObject]
+  {
+      //var numArray = [Int]()
+      var goSave: gameObject
+      var goPos: Int
+      var goNew: gameObject
+
+      var returnArray = gameObjects
+      for i in 0..<gameObjects.count
+      {
+        goSave = gameObjects[i]
+        goPos = getRandomInt(range: gameObjects.count - 1)
+        goNew = gameObjects[goPos]
+        returnArray[i] = goNew
+        returnArray[goPos] = goSave
+      }
+      return(returnArray)
   }
 }
